@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<thing:thing-descriptions bindingId="hyundaibluelink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:thing="https://openhab.org/schemas/thing-description/v1.0.0"
+    xsi:schemaLocation="https://openhab.org/schemas/thing-description/v1.0.0 https://openhab.org/schemas/thing-description-1.0.0.xsd">
+
+  <bridge-type id="accountBridge">
+    <label>Hyundai BlueLink Account</label>
+    <description>Hyundai/Kia BlueLink account bridge</description>
+    <config-description>
+    <parameter name="initialRefreshToken" type="text" required="true">
+  <label>OAuth Refresh Token (manual)</label>
+  <context>password</context>
+  <description>
+    Optional pre-obtained BlueLink refresh token. If set, the binding will
+    attempt to use this token to authenticate without running the interactive
+    browser login flow. This is primarily intended for advanced users who
+    obtain the token via external tools or scripts.
+  </description>
+  <advanced>false</advanced>
+</parameter>
+
+      <parameter name="pin" type="text" required="true">
+        <label>PIN</label>
+        <context>password</context>
+        <description>Your 4-digit BlueLink PIN used for remote controls</description>
+        <pattern>[0-9]{4}</pattern>
+      </parameter>
+      <parameter name="brand" type="text" required="true">
+        <label>Brand</label>
+        <options>
+          <option value="hyundai">Hyundai</option>
+          <option value="kia">Kia</option>
+        </options>
+        <default>hyundai</default>
+      </parameter>
+      <parameter name="region" type="text" required="true">
+        <label>Region</label>
+        <options>
+          <option value="eu">EU</option>
+        </options>
+        <default>eu</default>
+        <limitToOptions>true</limitToOptions>
+      </parameter>
+      <parameter name="language" type="text" required="false">
+        <label>Language</label>
+        <description>Language code sent to the Hyundai BlueLink back-end.</description>
+        <options>
+          <option value="cs">Čeština</option>
+          <option value="da">Dansk</option>
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+          <option value="fi">Suomi</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="it">Italiano</option>
+          <option value="pl">Polski</option>
+          <option value="hu">Magyar</option>
+          <option value="no">Norsk</option>
+          <option value="sk">Slovenčina</option>
+          <option value="es">Español</option>
+          <option value="sv">Svenska</option>
+        </options>
+        <default>de</default>
+      </parameter>
+      <parameter name="refresh" type="integer" required="false">
+        <label>Refresh Interval (minutes)</label>
+        <default>60</default>
+      </parameter>
+    </config-description>
+  </bridge-type>
+
+  <thing-type id="vehicle" listed="false">
+    <supported-bridge-type-refs>
+      <bridge-type-ref id="accountBridge"/>
+    </supported-bridge-type-refs>
+    <label>Hyundai BlueLink Vehicle</label>
+    <description>Represents a Hyundai/Kia vehicle</description>
+    <!-- The order of channel elements here controls how they appear in the UI. -->
+    <channels>
+      <channel id="lockState" typeId="lockState"/>
+      <channel id="climateControl" typeId="climateControl"/>
+      <channel id="status" typeId="status"/>
+      <channel id="odometer" typeId="odometer"/>
+      <channel id="range" typeId="range"/>
+      <channel id="evModeRange" typeId="evModeRange"/>
+      <channel id="batteryLevel" typeId="batteryLevel"/>
+      <channel id="gasModeRange" typeId="gasModeRange"/>
+      <channel id="fuelLevel" typeId="fuelLevel"/>
+      <channel id="lastUpdated" typeId="lastUpdated"/>
+      <channel id="location" typeId="location"/>
+      <channel id="startCharge" typeId="startCharge"/>
+      <channel id="chargingState" typeId="chargingState"/>
+      <channel id="chargingRemainTime" typeId="chargingRemainTime"/>
+      <channel id="connectorFastened" typeId="connectorFastened"/>
+      <channel id="doorStatus" typeId="doorStatus"/>
+      <channel id="windowStatus" typeId="windowStatus"/>
+      <channel id="climateStatus" typeId="climateStatus"/>
+      <channel id="batteryWarning" typeId="batteryWarning"/>
+      <channel id="acc" typeId="acc"/>
+      <channel id="minorWarnings" typeId="minorWarnings"/>
+      <channel id="lastNotification" typeId="lastNotification"/>
+      <channel id="chargeLimitAC" typeId="chargeLimitAC"/>
+      <channel id="chargeLimitDC" typeId="chargeLimitDC"/>
+      <channel id="targetTemperature" typeId="targetTemperature"/>
+      <channel id="frontWindowHeating" typeId="frontWindowHeating"/>
+      <channel id="rearWindowHeating" typeId="rearWindowHeating"/>
+      <channel id="controlHeatingSteeringWheel" typeId="controlHeatingSteeringWheel"/>
+      <channel id="controlHeatingSideMirror" typeId="controlHeatingSideMirror"/>
+      <channel id="controlHeatingRearWindow" typeId="controlHeatingRearWindow"/>
+      <channel id="reservationTime" typeId="reservationTime"/>
+      <channel id="reservationActive" typeId="reservationActive"/>
+      <channel id="reservationDefrost" typeId="reservationDefrost"/>
+    </channels>
+    <config-description>
+      <parameter name="vehicleId" type="text" required="false">
+        <label>Vehicle UUID</label>
+        <description>BlueLink vehicle UUID (only needed when discovery cannot supply it)</description>
+      </parameter>
+    </config-description>
+  </thing-type>
+
+  <channel-type id="lockState">
+    <item-type>Switch</item-type>
+    <label>Lock control</label>
+    <description>Lock (ON) or unlock (OFF) the vehicle</description>
+    <state>
+      <options>
+        <option value="ON">Locked</option>
+        <option value="OFF">Unlocked</option>
+      </options>
+    </state>
+  </channel-type>
+
+  <channel-type id="climateControl">
+    <item-type>Switch</item-type>
+    <label>Climate control</label>
+    <description>Start (ON) or stop (OFF) the remote climate control</description>
+     <state>
+      <options>
+        <option value="ON">Start climate control</option>
+        <option value="OFF">Stop climate control</option>
+      </options>
+    </state>
+  </channel-type>
+
+  <channel-type id="status">
+    <item-type>String</item-type>
+    <label>Status</label>
+    <description>Vehicle status</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="odometer">
+    <item-type>Number:Length</item-type>
+    <label>Odometer</label>
+    <description>Vehicle odometer</description>
+    <state readOnly="true" pattern="%.0f %unit%"/>
+  </channel-type>
+
+  <channel-type id="odometer-km">
+    <item-type>Number:Length</item-type>
+    <label>Odometer</label>
+    <description>Vehicle odometer</description>
+    <state readOnly="true" pattern="%.0f km"/>
+  </channel-type>
+
+  <channel-type id="odometer-mi">
+    <item-type>Number:Length</item-type>
+    <label>Odometer</label>
+    <description>Vehicle odometer</description>
+    <state readOnly="true" pattern="%.0f mi"/>
+  </channel-type>
+
+  <channel-type id="batteryLevel">
+    <item-type>Number:Dimensionless</item-type>
+    <label>Battery Level</label>
+    <description>Traction battery state of charge in percent</description>
+    <state readOnly="true" />
+  </channel-type>
+
+  <channel-type id="fuelLevel">
+    <item-type>Number:Dimensionless</item-type>
+    <label>Fuel Level</label>
+    <description>Fuel tank level in percent</description>
+    <state readOnly="true" />
+  </channel-type>
+    
+  <channel-type id="range">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Range</label>
+    <description>Estimated combined driving range (electric/gas)</description>
+    <state readOnly="true" pattern="%.0f %unit%"/>
+  </channel-type>
+
+  <channel-type id="range-km">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Range</label>
+    <description>Estimated combined driving range (electric/gas)</description>
+    <state readOnly="true" pattern="%.0f km"/>
+  </channel-type>
+
+  <channel-type id="range-mi">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Range</label>
+    <description>Estimated combined driving range (electric/gas)</description>
+    <state readOnly="true" pattern="%.0f mi"/>
+  </channel-type>
+
+  <channel-type id="evModeRange">
+    <item-type>Number:Length</item-type>
+    <label>Remaining EV Mode Range</label>
+    <description>Estimated driving range using the electric engine only</description>
+    <state readOnly="true" pattern="%.0f %unit%"/>
+  </channel-type>
+
+  <channel-type id="evModeRange-km">
+    <item-type>Number:Length</item-type>
+    <label>Remaining EV Mode Range</label>
+    <description>Estimated driving range using the electric engine only</description>
+    <state readOnly="true" pattern="%.0f km"/>
+  </channel-type>
+
+  <channel-type id="evModeRange-mi">
+    <item-type>Number:Length</item-type>
+    <label>Remaining EV Mode Range</label>
+    <description>Estimated driving range using the electric engine only</description>
+    <state readOnly="true" pattern="%.0f mi"/>
+  </channel-type>
+
+  <channel-type id="gasModeRange">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Fuel Range</label>
+    <description>Estimated driving range using the combustion engine only</description>
+    <state readOnly="true" pattern="%.0f %unit%"/>
+  </channel-type>
+
+  <channel-type id="gasModeRange-km">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Fuel Range</label>
+    <description>Estimated driving range using the combustion engine only</description>
+    <state readOnly="true" pattern="%.0f km"/>
+  </channel-type>
+
+  <channel-type id="gasModeRange-mi">
+    <item-type>Number:Length</item-type>
+    <label>Remaining Fuel Range</label>
+    <description>Estimated driving range using the combustion engine only</description>
+    <state readOnly="true" pattern="%.0f mi"/>
+  </channel-type>
+
+  <channel-type id="acc">
+    <item-type>Switch</item-type>
+    <label>Ignition (ACC)</label>
+    <description>Status of the vehicle's accessory/ignition power</description>
+    <state readOnly="true">
+      <options>
+        <option value="ON">Accessory On</option>
+        <option value="OFF">Accessory Off</option>
+      </options>
+    </state>
+  </channel-type>
+
+  <channel-type id="minorWarnings">
+    <item-type>String</item-type>
+    <label>Minor Warnings</label>
+    <description>Combined status string of minor warnings (e.g. hazard lights, tail lamps, sleeping mode)</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="lastNotification">
+    <item-type>String</item-type>
+    <label>Last Notification</label>
+    <description>Last push notification message from the vehicle</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="lastUpdated">
+    <item-type>DateTime</item-type>
+    <label>Last Updated</label>
+    <description>Timestamp of the last status refresh</description>
+  </channel-type>
+
+  <channel-type id="location">
+    <item-type>Location</item-type>
+    <label>Location</label>
+    <description>Vehicle location</description>
+  </channel-type>
+
+  <channel-type id="startCharge">
+    <item-type>Switch</item-type>
+    <label>Charge Control</label>
+    <description>Controls EV charging (ON starts charging, OFF stops charging)</description>
+    <state>
+      <options>
+        <option value="ON">Start charging</option>
+        <option value="OFF">Stop charging</option>
+      </options>
+    </state>
+  </channel-type>
+
+  <channel-type id="chargingState">
+    <item-type>Number</item-type>
+    <label>Charging State</label>
+    <description>Raw charging state value reported by the vehicle</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="chargingRemainTime">
+    <item-type>Number:Time</item-type>
+    <label>Remaining Charge Time</label>
+    <description>Estimated remaining time until charging completes</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="connectorFastened">
+    <item-type>Switch</item-type>
+    <label>Connector Fastened</label>
+    <description>Indicates whether the charging connector is fastened</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="doorStatus">
+    <item-type>String</item-type>
+    <label>Door Status</label>
+    <description>Summarized door positions (frontLeft, frontRight, rearLeft, rearRight, trunk, hood)</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="windowStatus">
+    <item-type>String</item-type>
+    <label>Window Status</label>
+    <description>Summarized window positions</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="climateStatus">
+    <item-type>Switch</item-type>
+    <label>Climate Status</label>
+    <description>Indicates whether remote climate control is active</description>
+    <state readOnly="true"/>
+  </channel-type>
+
+  <channel-type id="batteryWarning">
+    <item-type>Switch</item-type>
+    <label>Battery Warning</label>
+    <description>Shows the state of the battery warning indicator</description>
+     <state readOnly="true">
+      <options>
+        <option value="ON">Warnleuchte aktiviert</option>
+        <option value="OFF">Warnleuchte deaktiviert</option>
+      </options>
+    </state>
+  </channel-type>
+
+
+
+  <channel-type id="chargeLimitAC">
+    <item-type>Number:Dimensionless</item-type>
+    <label>Charge Limit AC</label>
+    <description>Target battery SOC for AC charging (0-100)</description>
+    <state min="0" max="100" step="10" pattern="%.0f %%"/>
+  </channel-type>
+
+  <channel-type id="chargeLimitDC">
+    <item-type>Number:Dimensionless</item-type>
+    <label>Charge Limit DC</label>
+    <description>Target battery SOC for DC charging (0-100)</description>
+    <state min="0" max="100" step="10" pattern="%.0f %%"/>
+  </channel-type>
+
+  <channel-type id="targetTemperature">
+    <item-type>Number:Temperature</item-type>
+    <label>Target Temperature</label>
+    <description>Target climate temperature</description>
+    <state step="0.5" />
+  </channel-type>
+
+  <channel-type id="frontWindowHeating">
+    <item-type>Switch</item-type>
+    <label>Front Window Heating</label>
+    <description>Enable front window heating (defrost) during remote climate start</description>
+  </channel-type>
+
+  <channel-type id="rearWindowHeating">
+    <item-type>Switch</item-type>
+    <label>Rear Window &amp; Side Mirror Heating</label>
+    <description>Enable rear window heating (which automatically includes side mirror heating) during remote climate start</description>
+  </channel-type>
+  <channel-type id="controlHeatingSteeringWheel">
+    <item-type>Switch</item-type>
+    <label>Steering Wheel Heating</label>
+    <description>Enable steering wheel heating during remote climate start</description>
+  </channel-type>
+
+  <channel-type id="controlHeatingSideMirror">
+    <item-type>Switch</item-type>
+    <label>Side Mirror Heating</label>
+    <description>Enable side mirror heating during remote climate start</description>
+  </channel-type>
+
+  <channel-type id="controlHeatingRearWindow">
+    <item-type>Switch</item-type>
+    <label>Rear Window Heating (New)</label>
+    <description>Enable rear window heating during remote climate start (distinct from legacy rear window &amp; side mirror heating)</description>
+  </channel-type>
+
+  <channel-type id="reservationTime">
+    <item-type>DateTime</item-type>
+    <label>Departure Time</label>
+    <description>Scheduled departure time for vehicle preconditioning</description>
+  </channel-type>
+
+  <channel-type id="reservationActive">
+    <item-type>Switch</item-type>
+    <label>Reservation Active</label>
+    <description>Enable or disable the scheduled preheating reservation</description>
+  </channel-type>
+
+  <channel-type id="reservationDefrost">
+    <item-type>Switch</item-type>
+    <label>Reservation Defrost</label>
+    <description>Enable defrosting during scheduled preheating</description>
+  </channel-type>
+</thing:thing-descriptions>

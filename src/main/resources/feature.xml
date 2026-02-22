@@ -1,0 +1,6 @@
+<features name="openhab-addons" xmlns="http://karaf.apache.org/xmlns/features/v1.4.0">
+  <feature name="openhab-binding-hyundaibluelink" description="Hyundai BlueLink Binding" version="5.0.2-SNAPSHOT">
+    <bundle>mvn:org.openhab.addons.bundles/org.openhab.binding.hyundaibluelink/5.0.2-SNAPSHOT</bundle>
+    <bundle>mvn:com.google.code.gson/gson/2.9.1</bundle>
+  </feature>
+</features>

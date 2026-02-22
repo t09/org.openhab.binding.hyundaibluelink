@@ -1,0 +1,8 @@
+Bundle-Name: openHAB Add-ons :: Bundles :: Hyundai BlueLink Binding
+Bundle-SymbolicName: org.openhab.binding.hyundaibluelink
+Export-Package: org.openhab.binding.hyundaibluelink.*
+Import-Package: \
+        org.json;resolution:=optional, \
+        !org.openhab.binding.hyundaibluelink.*, \
+        *
+-includeresource: @${.}/src/main/resources

@@ -1,0 +1,33 @@
+{
+  "resMsg": {
+    "vehicleStatusInfo": {
+      "vehicleStatus": {
+        "doorLock": true,
+        "evStatus": {
+          "batteryCharge": false,
+          "batteryStatus": 54,
+          "batteryPlugin": 0,
+          "remainTime2": {
+            "etc1": { "value": 22, "unit": 1 },
+            "etc2": { "value": 1020, "unit": 1 },
+            "etc3": { "value": 230, "unit": 1 },
+            "atc": { "value": 410, "unit": 1 }
+          },
+          "drvDistance": [
+            {
+              "rangeByFuel": {
+                "evModeRange": { "value": 235, "unit": 1 },
+                "totalAvailableRange": { "value": 235, "unit": 1 }
+              },
+              "type": 2
+            }
+          ]
+        },
+        "battery": { "batSoc": 91, "batState": 0 },
+        "odo": { "value": 12345, "unit": 1 },
+        "airCtrlOn": true,
+        "time": "20200718192140"
+      }
+    }
+  }
+}
